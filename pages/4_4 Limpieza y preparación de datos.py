@@ -1,34 +1,29 @@
 import streamlit as st
 
-st.title("Limpieza y preparación de datos (Data Cleaning & Wrangling)")
+st.title("4️⃣ Limpieza y Preparación de Datos")
 
 st.markdown("""
-Objetivo:
-- Dejar los datos consistentes y listos para análisis/modelado.
-
-Limpieza:
-- Valores faltantes: imputar (media/mediana/moda) o eliminar según impacto.
-- Duplicados: identificar y quitar si no aportan.
-- Consistencia: unificar categorías (ej. "México"/"Mexico"/"MEX").
-- Tipos: convertir a fecha, numérico o texto según corresponda.
-
-Feature engineering:
-- Fechas: día de la semana, mes, trimestre, estacionalidad.
-- Ratios y banderas (flags) para reglas simples.
-- Variables dummy para categorías.
-
-Preparación para modelado:
-- Escalado/normalización para algoritmos que lo requieren.
-- Codificación de texto/categorías (one-hot, ordinal) según el caso.
-
-Split de datos:
-- Separar entrenamiento/validación/prueba para evaluar correctamente.
-- Evitar fuga de información: aplicar transformaciones usando solo entrenamiento.
-
-Checklist:
-- Datos sin nulos críticos ni duplicados.
-- Categorías consistentes y tipos correctos.
-- Conjunto dividido con reproducibilidad (semillas).
+Para garantizar la calidad del análisis, se implementó un pipeline de limpieza en el módulo `src/etl.py`.
 """)
 
-st.info("Cuando avances, reemplaza estas indicaciones por la implementación correspondiente de esta etapa.")
+st.subheader("🛠️ Transformaciones Realizadas")
+
+code = '''
+# 1. Corrección de Formato Numérico
+# El original tenía '2,500' como texto. Se eliminaron comas y convirtió a int.
+df['NumeroPoblacionObjetivo'] = df['NumeroPoblacionObjetivo'].str.replace(',', '').astype(int)
+
+# 2. Optimización de Memoria
+# Las columnas repetitivas se convirtieron a tipo 'category'.
+cols_cat = ['NombreRegion', 'TipoPoblacionObjetivo', 'CausaMortalidad']
+for col in cols_cat:
+    df[col] = df[col].astype('category')
+
+# 3. Validación de Nulos
+# Se verificó que no existieran registros vacíos en campos críticos.
+df.dropna(subset=['NumeroCasos', 'Anio'], inplace=True)
+'''
+st.code(code, language='python')
+
+st.markdown("### ✅ Resultado")
+st.success("El dataset resultante está listo para cálculos matemáticos y optimizado para el dashboard.")

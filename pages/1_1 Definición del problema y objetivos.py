@@ -1,40 +1,24 @@
 import streamlit as st
 
-st.title("Definición del problema y objetivos (Business Understanding)")
+st.title("1️⃣ Definición del Problema y Objetivos")
 
 st.markdown("""
-¿Qué es esta etapa?
-- Define con palabras simples qué quieres lograr y por qué.
-- El resultado es una frase clara con objetivos y cómo medir el éxito.
+### 🚩 Contexto del Problema
+La salud mental es un desafío creciente en Antioquia. Los datos históricos sugieren un incremento sostenido en los casos de suicidio, pero la asignación de recursos a menudo se basa en conteos absolutos (donde las grandes ciudades siempre "ganan") y no en tasas de riesgo real.
 
-Cómo redactar el problema:
-- Plantilla: "Queremos [acción] para [impacto] en [área/cliente]".
-- Ejemplos:
-  - "Reducir el churn de clientes en 15% en 12 meses".
-  - "Predecir ventas del próximo trimestre para planificar inventario".
-  - "Detectar posibles fraudes en transacciones en tiempo real".
+Se ha identificado una necesidad urgente de:
+1. **Descentralizar el análisis:** Mirar más allá del Valle de Aburrá.
+2. **Normalizar métricas:** Evaluar el riesgo relativo (tasa x 100k hab).
+3. **Identificar patrones:** Temporales y geográficos.
 
-KPIs (métricas de éxito):
-- Deben ser SMART (Específicos, Medibles, Alcanzables, Relevantes, con Tiempo).
-- Ejemplos:
-  - Churn: tasa de cancelación mensual.
-  - Ventas: error medio absoluto (MAE) de la predicción.
-  - Fraude: recall en casos de fraude + tasa de falsos positivos aceptable.
+### 🎯 Objetivos del Proyecto
 
-Stakeholders:
-- ¿Quién usa el resultado? (gerentes, marketing, finanzas, atención al cliente).
-- Define decisiones que soportará el modelo/informe.
-- Acordar criterios de éxito y restricciones (presupuesto, tiempos, regulaciones).
+#### Objetivo General
+Desarrollar un sistema de inteligencia de datos que permita a la Secretaría de Salud identificar **focos de riesgo** en los 125 municipios de Antioquia.
 
-Alcance y supuestos:
-- Qué sí y qué no se hará (anti-objetivos).
-- Supuestos iniciales y riesgos (datos incompletos, cambios de negocio).
-
-Checklist para completar:
-- Problema escrito en una frase.
-- KPIs definidos con umbrales.
-- Stakeholders y decisiones identificadas.
-- Criterios de éxito y límites acordados.
+#### Objetivos Específicos
+* **Analizar** la tendencia temporal de los últimos 20 años.
+* **Detectar** municipios pequeños (<10k hab) con tasas desproporcionadamente altas.
+* **Correlacionar** variables demográficas con la incidencia de casos.
+* **Visualizar** los hallazgos en un dashboard interactivo para la toma de decisiones.
 """)
-
-st.info("Cuando avances, reemplaza estas indicaciones por la implementación correspondiente de esta etapa.")

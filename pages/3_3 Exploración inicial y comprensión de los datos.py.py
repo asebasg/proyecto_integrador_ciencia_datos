@@ -1,34 +1,28 @@
 import streamlit as st
+import pandas as pd
+import plotly.express as px
+from src.etl import cargar_datos # Usamos tu módulo
 
-st.title("Exploración inicial y comprensión de los datos (Data Understanding / EDA)")
+st.title("3️⃣ Exploración Inicial (EDA)")
 
-st.markdown("""
-Objetivo:
-- Entender la forma de los datos antes de cualquier modelo.
+# Cargar datos usando tu función limpia
+df = cargar_datos()
 
-Pasos básicos:
-- Cargar datos (pandas, Excel) y ver primeras filas.
-- Revisar estructura: número de filas/columnas, tipos (numérico, texto, fecha).
-- Detectar valores faltantes y duplicados.
+st.markdown("### 📊 Estadísticas Descriptivas")
 
-Estadísticas descriptivas:
-- Medidas como media, mediana, desviación ayudan a entender tendencias y variabilidad.
-- Revisa mínimos, máximos y valores raros.
+col1, col2 = st.columns(2)
+with col1:
+    st.metric("Total de Registros", len(df))
+    st.metric("Municipios Cubiertos", df['NombreMunicipio'].nunique())
 
-Visualizaciones útiles:
-- Histogramas: distribución de una variable.
-- Boxplots: rangos y outliers.
-- Dispersión: relación entre dos variables.
-- Matriz de correlación: qué variables se mueven juntas (correlación ≠ causalidad).
+with col2:
+    st.metric("Total de Casos (2005-2024)", f"{df['NumeroCasos'].sum():,.0f}")
+    st.metric("Promedio Casos/Año", f"{df.groupby('Anio')['NumeroCasos'].sum().mean():.0f}")
 
-Qué buscar:
-- Anomalías (edades negativas, fechas imposibles).
-- Desbalance de clases (muy pocos positivos).
-- Posible leakage (variables que revelan la respuesta de forma indirecta).
+st.markdown("### 🔍 Distribución de Variables")
 
-Resultados esperados:
-- Lista de problemas detectados y preguntas para negocio.
-- Hipótesis iniciales sobre relaciones y factores importantes.
-""")
+# Histograma simple de casos
+fig = px.histogram(df, x="NumeroCasos", nbins=50, title="Distribución de Casos por Registro Anual")
+st.plotly_chart(fig)
 
-st.info("Cuando avances, reemplaza estas indicaciones por la implementación correspondiente de esta etapa.")
+st.write("Se observa una distribución sesgada a la derecha: la mayoría de municipios reportan 0 o pocos casos, mientras que unos pocos (Medellín, Bello) reportan cifras muy altas.")
