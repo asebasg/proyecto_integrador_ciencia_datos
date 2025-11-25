@@ -4,3 +4,5 @@
 .streamlit/secrets.yaml
 .streamlit/secrets.json
 
+.qodo/
+.vscode/
