@@ -100,3 +100,21 @@ Cada página incluye un aviso: reemplaza las indicaciones por la implementación
 - No carga archivos de `static/`: verifica `enableStaticServing = true` en `config.toml` y rutas relativas correctas.
 - Clave de Gemini no encontrada: revisa `secrets.toml` y acceso con `st.secrets`.
 - Datos con caracteres extraños: especifica `encoding="utf-8"` al leer CSV.
+---
+
+## 📖 Diccionario de Datos: Suicidios en Antioquia (Tarea DE&Q)
+
+Como parte de la tarea de Data Engineer & Quality, se documenta la estructura del dataset 'suicidios-en-antioquia.csv'.
+
+| Columna | Descripción | Tipo de Dato | Notas de Calidad |
+| :--- | :--- | :--- | :--- |
+| `Municipio` | Nombre del municipio donde ocurrió el evento. | String | Columna categórica clave para análisis geográfico. |
+| `Fecha` | Fecha exacta del evento. | Date | Debe ser un formato de fecha válido (YYYY-MM-DD). |
+| `Edad` | Edad de la persona. | Integer | No debe contener valores nulos ni ser negativo. |
+| `Sexo` | Género de la persona (M/F/Otro). | String | Usado en análisis de demografía. |
+| `Causa` | Descripción de la causa del deceso. | String | Columna clave para el análisis principal. |
+| `Clase` | Clasificación o tipo de evento (ej. Suicidio, Homicidio). | String | Debe ser limpiada de inconsistencias. |
+| `Anio` | Año en que ocurrió el evento. | Integer | Usado para validación de duplicados (junto con Municipio). |
+| `Estrato` | Nivel socioeconómico. | Integer | Se requiere un mapeo para estandarizar valores. |
+| `Dia` | Día de la semana en que ocurrió el evento. | String | Usado para análisis de patrones temporales. |
+| `Total` | Conteo de la ocurrencia. | Integer | Siempre debe ser 1 (indicador de un evento). |
