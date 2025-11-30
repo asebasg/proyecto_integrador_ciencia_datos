@@ -1,3 +1,80 @@
-# Asignado a Sebastián (@asebasg)
-
 enableStaticServing = true
+
+# Configuración visual de Streamlit
+
+[theme]
+# Paleta de colores profesional
+
+# Color primario: Azul oscuro
+# Utilizado para botones, enlaces, elementos interactivos
+primaryColor = "#1e3a8a"
+
+# Color de fondo principal: Blanco puro (limpio y accesible)
+backgroundColor = "#ffffff"
+
+# Color de fondo secundario: Gris claro (sidebar, cards, secciones)
+# Proporciona contraste sutil sin ser agresivo
+secondaryBackgroundColor = "#f1f5f9"
+
+# Color de texto: Gris oscuro (alta legibilidad, menos cansancio visual)
+textColor = "#1f2937"
+
+# Fuente: Sans-serif moderna (legible en pantallas)
+# Opciones: "sans serif", "serif", "monospace"
+font = "sans serif"
+
+# Configuración del servidor
+
+[server]
+
+# Habilitar servir archivos estáticos desde carpeta static/
+# Permite acceder a: static/datasets, static/images/
+enableStaticServing = true
+
+# Evitar que se abra el navegador automáticamente al iniciar
+# Útil para desarrollo y despliegue en servidores
+headLess = true
+
+# Puerto por defecto (8501 es el estándar de Streamlit)
+port = 8501
+
+# Permitir CORS (Cross-Origin Resource Sharing)
+# Útil si planean hacer deploy en dominios diferentes
+enableCORS = false
+
+# Habilitar WebSocket para actualizaciones en tiempo real
+enableWebsocketCompression = true
+
+# Configuración del navegador 
+[browser]
+
+# Deshabilitar recolección de estadísticas de uso
+# Respeta la privacidad del usuario
+gatherUsageStats = false
+
+# Color del icono del navegador (favicon)
+# Usar el color primario para consistencia
+serverAddress = "localhost"
+
+# Configuracion del UI/UX
+[ui]
+# Ocultar el menú de hamburguesa (opcional, para presentaciones)
+# Quitar comentario de la siguiente línea si se desea una interfaz más limpia
+# hideTopBar = true
+
+# Configuración del logger (desarrollo)
+[logger]
+# Nivel de logging: "error", "warning", "info", "debug"
+# Para producción, usar "warning" o "error"
+level = "info"
+
+# ========================================
+# NOTAS PARA EL EQUIPO
+# ========================================
+# 1. Este archivo NO debe incluir información sensible (API keys, contraseñas)
+# 2. Para secretos, usar: .streamlit/secrets.toml (ya está en .gitignore)
+# 3. Colores seleccionados para:
+#    - Accesibilidad (contraste WCAG AA)
+#    - Profesionalismo (tema serio)
+#    - Legibilidad (texto oscuro sobre fondos claros)
+# 4. La paleta se replica en utils/visualizations.py para gráficos
