@@ -1,5 +1,4 @@
 # Asignado a Ricardo (@ricardo778)
-# Asignado a Ricardo (@ricardo778)
 
 # Importar funciones de data_loader
 from .data_loader import cargar_datos, verificar_duplicados
