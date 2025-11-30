@@ -1,3 +1,5 @@
+# Asignado a Ricardo (@ricardo778)
+
 import streamlit as st
 
 st.title("4️⃣ Limpieza y Preparación de Datos")

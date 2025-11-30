@@ -1,3 +1,5 @@
+# Asignado a: Sebastian (@asebasg)
+
 import streamlit as st
 
 st.title("1️⃣ Definición del Problema y Objetivos")
