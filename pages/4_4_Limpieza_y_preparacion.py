@@ -2,6 +2,8 @@
 
 import streamlit as st
 import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 import sys
 import os
 
@@ -27,32 +29,31 @@ Transformar los datos crudos en un formato adecuado para análisis, aplicando:
 df_original = cargar_datos()
 
 if not df_original.empty:
-    # Mostrar estado inicial
-    st.header("📊 Estado Inicial de los Datos")
+    # KPI Cards principales
+    st.header("📊 Estado Inicial del Dataset")
     
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("Registros originales", f"{len(df_original):,}")
+        st.metric("📥 Registros Iniciales", f"{len(df_original):,}")
     
     with col2:
-        municipios_count = df_original['NombreMunicipio'].nunique()
-        st.metric("Municipios", municipios_count)
+        st.metric("🏙️ Municipios", df_original['NombreMunicipio'].nunique())
     
     with col3:
-        st.metric("Años cubiertos", f"{df_original['Anio'].min()}-{df_original['Anio'].max()}")
+        st.metric("📅 Rango de Años", f"{df_original['Anio'].min()}-{df_original['Anio'].max()}")
     
-    # Mostrar datos originales
-    st.subheader("👀 Vista de Datos Originales")
-    st.dataframe(df_original.head(8), use_container_width=True)
+    with col4:
+        st.metric("🗺️ Regiones", df_original['NombreRegion'].nunique())
     
     # Aplicar transformaciones
-    st.header("🔄 Transformaciones Aplicadas")
+    st.header("🔄 Proceso de Transformación")
     
     df_transformado = df_original.copy()
     
-    # 1. Calcular tasas
-    st.subheader("1. Cálculo de Tasas por 100,000 Habitantes")
+    # 1. CALCULAR TASAS - SECCIÓN VISUAL
+    st.subheader("📊 1. Cálculo de Tasas por 100,000 Habitantes")
+    
     try:
         df_transformado = calcular_tasas(
             df_transformado, 
@@ -60,130 +61,194 @@ if not df_original.empty:
             'NumeroPoblacionObjetivo', 
             'tasa_suicidios'
         )
-        st.success("✅ Tasa de suicidios calculada correctamente")
         
-        # Mostrar ejemplo del cálculo
-        st.write("**Ejemplo del cálculo:**")
-        ejemplo = df_transformado[[
-            'NombreMunicipio', 
-            'Anio', 
-            'NumeroCasos', 
-            'NumeroPoblacionObjetivo', 
-            'tasa_suicidios'
-        ]].head(5)
-        st.dataframe(ejemplo, use_container_width=True)
+        col1, col2 = st.columns(2)
         
+        with col1:
+            # KPI de tasa promedio
+            tasa_promedio = df_transformado['tasa_suicidios'].mean()
+            fig_kpi_tasa = go.Figure(go.Indicator(
+                mode = "number",
+                value = tasa_promedio,
+                number = {'suffix': " por 100k"},
+                title = {"text": "Tasa Promedio de Suicidios"},
+                domain = {'x': [0, 1], 'y': [0, 1]}
+            ))
+            fig_kpi_tasa.update_layout(height=200)
+            st.plotly_chart(fig_kpi_tasa, use_container_width=True)
+        
+        with col2:
+            # Histograma de tasas
+            fig_tasas = px.histogram(
+                df_transformado,
+                x='tasa_suicidios',
+                nbins=50,
+                title='Distribución de Tasas de Suicidio',
+                color_discrete_sequence=['#FF6B6B']
+            )
+            st.plotly_chart(fig_tasas, use_container_width=True)
+            
     except Exception as e:
         st.error(f"❌ Error calculando tasas: {e}")
     
-    # 2. Categorizar por riesgo
-    st.subheader("2. Categorización por Nivel de Riesgo")
+    # 2. CATEGORIZACIÓN DE RIESGO - SECCIÓN VISUAL
+    st.subheader("🎯 2. Categorización por Nivel de Riesgo")
+    
     if 'tasa_suicidios' in df_transformado.columns:
         try:
             df_transformado = crear_categorias_riesgo(df_transformado, 'tasa_suicidios')
-            st.success("✅ Niveles de riesgo asignados (Bajo/Medio/Alto)")
             
-            # Mostrar distribución de riesgo
-            st.write("**Distribución por nivel de riesgo:**")
-            distribucion = df_transformado['nivel_riesgo'].value_counts()
-            st.bar_chart(distribucion)
+            col1, col2 = st.columns(2)
             
-            # Mostrar estadísticas de riesgo
-            st.write("**Resumen por categoría de riesgo:**")
-            resumen_riesgo = df_transformado.groupby('nivel_riesgo').agg({
-                'tasa_suicidios': ['mean', 'min', 'max'],
-                'NombreMunicipio': 'count'
-            }).round(2)
-            st.dataframe(resumen_riesgo)
+            with col1:
+                # Pie chart de distribución de riesgo
+                riesgo_counts = df_transformado['nivel_riesgo'].value_counts()
+                fig_riesgo = px.pie(
+                    values=riesgo_counts.values,
+                    names=riesgo_counts.index,
+                    title='Distribución por Nivel de Riesgo',
+                    color_discrete_sequence=['#4CAF50', '#FFC107', '#F44336'],
+                    hole=0.3
+                )
+                st.plotly_chart(fig_riesgo, use_container_width=True)
             
+            with col2:
+                # Violin plot de tasas por categoría
+                fig_violin = px.violin(
+                    df_transformado,
+                    x='nivel_riesgo',
+                    y='tasa_suicidios',
+                    title='Distribución de Tasas por Nivel de Riesgo',
+                    color='nivel_riesgo',
+                    color_discrete_sequence=['#4CAF50', '#FFC107', '#F44336'],
+                    box=True
+                )
+                st.plotly_chart(fig_violin, use_container_width=True)
+                
         except Exception as e:
             st.error(f"❌ Error categorizando riesgo: {e}")
-    else:
-        st.warning("⚠️ No se pudo categorizar por riesgo - tasa no calculada")
     
-    # 3. Limpieza de datos faltantes
-    st.subheader("3. Limpieza de Valores Faltantes")
+    # 3. LIMPIEZA DE DATOS - SECCIÓN VISUAL
+    st.subheader("🧼 3. Limpieza de Valores Faltantes")
+    
     try:
         filas_antes = len(df_transformado)
         df_transformado = limpiar_datos_faltantes(df_transformado)
         filas_despues = len(df_transformado)
         
-        if filas_antes == filas_despues:
-            st.success("✅ No se encontraron valores faltantes")
-        else:
-            st.warning(f"⚠️ Se eliminaron {filas_antes - filas_despues} registros con valores faltantes")
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            # Indicador de retención
+            retencion = (filas_despues / filas_antes) * 100
+            fig_retencion = go.Figure(go.Indicator(
+                mode = "gauge+number",
+                value = retencion,
+                domain = {'x': [0, 1], 'y': [0, 1]},
+                title = {'text': "Retención de Datos (%)"},
+                gauge = {
+                    'axis': {'range': [None, 100]},
+                    'bar': {'color': "green"},
+                    'steps': [
+                        {'range': [0, 90], 'color': "red"},
+                        {'range': [90, 99], 'color': "yellow"},
+                        {'range': [99, 100], 'color': "lightgreen"}
+                    ]
+                }
+            ))
+            fig_retencion.update_layout(height=300)
+            st.plotly_chart(fig_retencion, use_container_width=True)
+        
+        with col2:
+            # Gráfica de comparación antes/después
+            fig_comparacion = go.Figure()
+            fig_comparacion.add_trace(go.Bar(
+                name='Antes de Limpieza',
+                x=['Registros'],
+                y=[filas_antes],
+                marker_color='orange'
+            ))
+            fig_comparacion.add_trace(go.Bar(
+                name='Después de Limpieza',
+                x=['Registros'],
+                y=[filas_despues],
+                marker_color='green'
+            ))
+            fig_comparacion.update_layout(title='Comparación: Registros Antes y Después de Limpieza')
+            st.plotly_chart(fig_comparacion, use_container_width=True)
+                
     except Exception as e:
         st.error(f"❌ Error limpiando datos: {e}")
     
-    # Mostrar comparación final
-    st.header("📈 Comparación Final: Antes vs Después")
+    # RESUMEN VISUAL DEL PROCESO
+    st.header("📈 Resumen Visual del Proceso de Transformación")
     
-    col1, col2 = st.columns(2)
+    # Gráfica de radar para mostrar el progreso
+    categorias = ['Carga Datos', 'Cálculo Tasas', 'Categorización', 'Limpieza']
+    valores = [100, 100, 100, retencion]  # Asumiendo 100% éxito en otros pasos
+    
+    fig_radar = go.Figure()
+    fig_radar.add_trace(go.Scatterpolar(
+        r=valores,
+        theta=categorias,
+        fill='toself',
+        name='Progreso del Proceso',
+        line=dict(color='blue')
+    ))
+    fig_radar.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 100]
+            )),
+        showlegend=False,
+        title="Progreso del Proceso de Transformación"
+    )
+    st.plotly_chart(fig_radar, use_container_width=True)
+    
+    # KPI FINALES
+    st.header("🎉 Resultados Finales del Proceso")
+    
+    col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.subheader("Antes de las Transformaciones")
-        columnas_original = [
-            'NombreMunicipio', 
-            'Anio', 
-            'NumeroCasos', 
-            'NumeroPoblacionObjetivo'
-        ]
-        st.dataframe(df_original[columnas_original].head(8), use_container_width=True)
-        st.caption(f"Forma original: {df_original.shape}")
+        fig_final_registros = go.Figure(go.Indicator(
+            mode = "number",
+            value = len(df_transformado),
+            title = {"text": "Registros Finales"},
+            number = {'valueformat': ","},
+            domain = {'x': [0, 1], 'y': [0, 1]}
+        ))
+        fig_final_registros.update_layout(height=200)
+        st.plotly_chart(fig_final_registros, use_container_width=True)
     
     with col2:
-        st.subheader("Después de las Transformaciones")
-        columnas_transformadas = [
-            'NombreMunicipio', 
-            'Anio', 
-            'NumeroCasos', 
-            'NumeroPoblacionObjetivo'
-        ]
         if 'tasa_suicidios' in df_transformado.columns:
-            columnas_transformadas.append('tasa_suicidios')
+            fig_final_tasa = go.Figure(go.Indicator(
+                mode = "number",
+                value = df_transformado['tasa_suicidios'].mean(),
+                title = {"text": "Tasa Promedio Final"},
+                number = {'suffix': " por 100k"},
+                domain = {'x': [0, 1], 'y': [0, 1]}
+            ))
+            fig_final_tasa.update_layout(height=200)
+            st.plotly_chart(fig_final_tasa, use_container_width=True)
+    
+    with col3:
         if 'nivel_riesgo' in df_transformado.columns:
-            columnas_transformadas.append('nivel_riesgo')
-            
-        st.dataframe(df_transformado[columnas_transformadas].head(8), use_container_width=True)
-        st.caption(f"Forma transformada: {df_transformado.shape}")
-    
-    # Resumen de transformaciones
-    st.header("📋 Resumen de Transformaciones")
-    
-    transformaciones = [
-        "✅ **Cálculo de tasas**: Tasa de suicidios por 100,000 habitantes", 
-        "✅ **Categorización**: Niveles de riesgo (Bajo/Medio/Alto)",
-        "✅ **Limpieza**: Eliminación de valores faltantes",
-        "✅ **Validación**: Verificación de integridad de datos",
-        "✅ **Conversión de formatos**: Población de texto a numérico"
-    ]
-    
-    for transformacion in transformaciones:
-        st.write(transformacion)
-    
-    # Información adicional sobre el dataset
-    st.header("📊 Información del Dataset Procesado")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.subheader("Estadísticas de Tasas")
-        if 'tasa_suicidios' in df_transformado.columns:
-            stats = df_transformado['tasa_suicidios'].describe()
-            st.write(f"**Media:** {stats['mean']:.2f}")
-            st.write(f"**Mínimo:** {stats['min']:.2f}")
-            st.write(f"**Máximo:** {stats['max']:.2f}")
-            st.write(f"**Desviación estándar:** {stats['std']:.2f}")
-    
-    with col2:
-        st.subheader("Distribución Geográfica")
-        if 'NombreRegion' in df_transformado.columns:
-            regiones = df_transformado['NombreRegion'].value_counts()
-            st.dataframe(regiones)
+            alto_riesgo = (df_transformado['nivel_riesgo'] == 'Alto riesgo').sum()
+            fig_alto_riesgo = go.Figure(go.Indicator(
+                mode = "number",
+                value = alto_riesgo,
+                title = {"text": "Municipios Alto Riesgo"},
+                domain = {'x': [0, 1], 'y': [0, 1]}
+            ))
+            fig_alto_riesgo.update_layout(height=200)
+            st.plotly_chart(fig_alto_riesgo, use_container_width=True)
         
 else:
     st.error("❌ No se pudieron cargar los datos para el proceso de limpieza")
 
 st.markdown("---")
-st.success("🎉 El dataset resultante está listo para análisis estadístico y visualización.")
+st.success("🎉 Proceso completado: Dataset listo para análisis avanzado")
 st.caption("Página desarrollada por Ricardo (@ricardo778) - Procesamiento y transformación de datos")
