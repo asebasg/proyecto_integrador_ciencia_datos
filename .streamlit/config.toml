@@ -1,12 +1,14 @@
-enableStaticServing = true
-
-# Configuración visual de Streamlit
+# CONFIGURACIÓN VISUAL DE STREAMLIT
+# Proyecto: Análisis de Suicidios en Antioquia
+# Responsable: Sebastián (Líder)
+# ========================================
 
 [theme]
-# Paleta de colores profesional
+# PALETA DE COLORES PROFESIONAL
+# Para tema sensible (suicidios), usamos colores sobrios y serios
 
-# Color primario: Azul oscuro
-# Utilizado para botones, enlaces, elementos interactivos
+# Color primario: Azul oscuro (botones, enlaces, elementos interactivos)
+# Transmite: Seriedad, profesionalismo, confianza
 primaryColor = "#1e3a8a"
 
 # Color de fondo principal: Blanco puro (limpio y accesible)
@@ -23,17 +25,17 @@ textColor = "#1f2937"
 # Opciones: "sans serif", "serif", "monospace"
 font = "sans serif"
 
-# Configuración del servidor
-
+# ========================================
+# CONFIGURACIÓN DEL SERVIDOR
+# ========================================
 [server]
-
-# Habilitar servir archivos estáticos desde carpeta static/
-# Permite acceder a: static/datasets, static/images/
+# Habilitar servir archivos estáticos desde carpeta /static
+# Permite acceder a: static/datasets/, static/images/
 enableStaticServing = true
 
 # Evitar que se abra el navegador automáticamente al iniciar
 # Útil para desarrollo y despliegue en servidores
-headLess = true
+headless = true
 
 # Puerto por defecto (8501 es el estándar de Streamlit)
 port = 8501
@@ -45,9 +47,10 @@ enableCORS = false
 # Habilitar WebSocket para actualizaciones en tiempo real
 enableWebsocketCompression = true
 
-# Configuración del navegador 
+# ========================================
+# CONFIGURACIÓN DEL NAVEGADOR
+# ========================================
 [browser]
-
 # Deshabilitar recolección de estadísticas de uso
 # Respeta la privacidad del usuario
 gatherUsageStats = false
@@ -56,13 +59,17 @@ gatherUsageStats = false
 # Usar el color primario para consistencia
 serverAddress = "localhost"
 
-# Configuracion del UI/UX
+# ========================================
+# CONFIGURACIÓN DE UI/UX
+# ========================================
 [ui]
 # Ocultar el menú de hamburguesa (opcional, para presentaciones)
-# Quitar comentario de la siguiente línea si se desea una interfaz más limpia
+# Descomenta la siguiente línea si quieres una interfaz más limpia
 # hideTopBar = true
 
-# Configuración del logger (desarrollo)
+# ========================================
+# CONFIGURACIÓN DE LOGGER (DESARROLLO)
+# ========================================
 [logger]
 # Nivel de logging: "error", "warning", "info", "debug"
 # Para producción, usar "warning" o "error"

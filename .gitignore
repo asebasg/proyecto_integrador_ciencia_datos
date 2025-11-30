@@ -3,6 +3,7 @@
 .streamlit/secrets.toml
 .streamlit/secrets.yaml
 .streamlit/secrets.json
+__pycache__/
 
 .qodo/
 .vscode/
