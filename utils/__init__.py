@@ -1,4 +1,14 @@
-# Asignado a Ricardo (@ricardo778)
+"""
+Módulo utils - Funciones utilitarias para el proyecto de análisis de suicidios en Antioquia
+
+Este módulo proporciona funciones para:
+- Carga y validación de datos
+- Preprocesamiento y transformación
+- Cálculos estadísticos
+- Visualizaciones
+
+Asignado a Ricardo (@ricardo778)
+"""
 
 # Importar funciones de data_loader
 from .data_loader import cargar_datos, verificar_duplicados
@@ -10,8 +20,7 @@ from .preprocessing import (
     agrupar_por_año,
     agrupar_por_municipio,
     crear_categorias_riesgo,
-    limpiar_datos_faltantes,
-    normalizar_nombres_columnas
+    limpiar_datos_faltantes
 )
 
 # Lista de todas las funciones disponibles
@@ -22,10 +31,9 @@ __all__ = [
     
     # Preprocessing
     'calcular_tasas',
-    'filtrar_por_municipio',
+    'filtrar_por_municipio', 
     'agrupar_por_año',
     'agrupar_por_municipio',
     'crear_categorias_riesgo',
-    'limpiar_datos_faltantes',
-    'normalizar_nombres_columnas'
+    'limpiar_datos_faltantes'
 ]

@@ -1,4 +1,7 @@
-# Asignado a Ricardo (@ricardo778)
+import sys
+import os
+# Agregar el directorio raíz al path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import streamlit as st
 import pandas as pd
@@ -12,7 +15,7 @@ st.markdown("""
 Los datos utilizados en este proyecto provienen de fuentes oficiales gubernamentales.
 
 * **Fuente Principal:** Secretaría de Salud y Protección Social de Antioquia.
-* **Dataset:** `suicidios_antioquia.csv`
+* **Dataset:** `suicidios-en-antioquia.csv`
 * **Periodo:** 2005 - 2024
 * **Cobertura:** 125 Municipios (9 Subregiones)
 """)
@@ -30,10 +33,14 @@ if not df.empty:
         st.subheader("📋 Metadatos del Dataset")
         st.write(f"**Registros:** {len(df):,}")
         st.write(f"**Columnas:** {len(df.columns)}")
-        st.write("**Período:**", f"{df['año'].min()} - {df['año'].max()}")
-        st.write("**Municipios:**", df['municipio'].nunique() if 'municipio' in df.columns else "N/A")
         
-        # Mostrar nombres de columnas
+        # Usar nombres correctos de columnas (con mayúsculas)
+        if 'Año' in df.columns:
+            st.write("**Período:**", f"{df['Año'].min()} - {df['Año'].max()}")
+        if 'NombreMunicipio' in df.columns:
+            st.write("**Municipios:**", df['NombreMunicipio'].nunique())
+        
+        # Mostrar nombres de columnas REALES
         st.write("**Variables disponibles:**")
         for col in df.columns:
             st.write(f"- {col} ({df[col].dtype})")
@@ -54,28 +61,16 @@ if not df.empty:
     st.dataframe(df.head(10))
     st.caption(f"Dimensiones: {df.shape[0]} filas × {df.shape[1]} columnas")
     
+    # Mostrar estadísticas básicas
+    st.subheader("📊 Estadísticas Básicas")
+    st.write(df.describe())
+    
 else:
     st.error("❌ No se pudieron cargar los datos")
-    
-    # Información de troubleshooting
-    st.markdown("""
-    ### 🔧 Solución de Problemas
-    Si los datos no se cargan, verifica:
-    1. Que el archivo `suicidios_antioquia.csv` esté en `static/datasets/`
-    2. Que el nombre del archivo sea correcto
-    3. Que el archivo tenga datos válidos
-    """)
 
 st.markdown("""
 ### ⚠️ Limitaciones Identificadas
 * La variable `NumeroPoblacionObjetivo` viene formateada como texto (con comas).
 * No existen variables socioeconómicas detalladas (ingresos, educación) en este dataset.
 * Los datos requieren transformación para análisis estadístico.
-""")
-
-# Información adicional sobre el proceso
-st.markdown("""
-### 🔄 Proceso de Carga
-Los datos se cargan mediante la función `cargar_datos()` ubicada en `utils/data_loader.py`, 
-la cual incluye cache para mejor rendimiento y manejo de errores.
 """)
