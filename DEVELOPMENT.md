@@ -14,9 +14,9 @@ proyecto_suicidios_antioquia/
 ├── pages/
 │   ├── 1_1_Definicion_y_Objetivos.py      # Sebastián
 │   ├── 2_2_Recoleccion_de_Datos.py        # Ricardo
-│   ├── 3_3_Exploracion_Inicial.py         # Juan (R)
+│   ├── 3_3_Exploracion_Inicial.py         # Juan
 │   ├── 4_4_Limpieza_y_Preparacion.py      # Ricardo
-│   ├── 5_5_Analisis_y_Hallazgos.py        # Juan (R)
+│   ├── 5_5_Analisis_y_Hallazgos.py        # Juan
 │   ├── 6_6_Storytelling_y_Visualizacion.py # Sebastián
 │   └── 7_7_IA_Generativa.py              # Sebastián (opcional)
 ├── .streamlit/
@@ -29,7 +29,7 @@ proyecto_suicidios_antioquia/
 │   ├── __init__.py                  # Ricardo
 │   ├── data_loader.py              # Ricardo
 │   ├── preprocessing.py            # Ricardo
-│   ├── calculations.py             # Juan (R)
+│   ├── calculations.py             # Juan
 │   └── visualizations.py           # Sebastián
 ├── docs/
 │   └── Informe_Analisis_Suicidios.md      # Juan (revisar documentación)
