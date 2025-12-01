@@ -116,7 +116,7 @@ with col2:
         label="📅 Casos en 2024",
         value=f"{casos_2024:,}",
         delta=f"{incremento_total:+.1f}% vs. 2005",
-        delta_color="inverse",  # Rojo para aumentos (negativo en salud pública)
+        delta_color="inverse",
         help="Incremento comparado con el año base 2005"
     )
 
@@ -253,7 +253,7 @@ with col_tabla:
     st.markdown("""
     <div style='background-color: #fef3c7; padding: 0.8rem; border-radius: 6px; margin-top: 1rem;'>
         <p style='margin: 0; font-size: 0.85rem;'>
-            <strong>⚠️ Insight:</strong> Las 3 regiones principales 
+            <strong>⚠️ Importante:</strong> Las 3 regiones principales 
             (Valle de Aburrá, Oriente y Suroeste) concentran el 
             <strong>78.9%</strong> de todos los casos.
         </p>
@@ -262,7 +262,7 @@ with col_tabla:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-#  6. Navegacion y estructura del proyecto
+#  6. Navegación y estructura del proyecto
 st.markdown("---")
 st.markdown("### 🧭 Navegación del Proyecto")
 
@@ -322,14 +322,14 @@ with footer_col2:
 with footer_col3:
     st.markdown("""
     **🔗 Recursos**
-    - [Documentación](docs/Informe_Analisis_Suicidios.md)
-    - [GitHub](https://github.com/tu-repo)
-    - [Secretaría de Salud](https://antioquia.gov.co/salud)
+    - [Documentación](https://github.com/asebasg/proyecto_integrador_ciencia_datos/blob/main/Informe_de_Analisis_Suicidios_en_Antioquia.md)
+    - [GitHub](https://github.com/asebasg/proyecto_integrador_ciencia_datos.git)
+    - [Secretaría de Salud](https://dssa.gov.co/)
     """)
 
 st.markdown("""
 <div style='text-align: center; color: #64748b; font-size: 0.85rem; margin-top: 2rem;'>
-    <p>Proyecto Integrador de Ciencia de Datos | Universidad [Nombre] | 2024</p>
+    <p>Proyecto Integrador de Ciencia de Datos | SENA (Centro de Tecnología de la Manufactura Avanzada) | 2025</p>
     <p>⚠️ Este análisis tiene fines académicos. Para intervenciones de salud pública, 
     consulte fuentes oficiales y profesionales especializados.</p>
 </div>

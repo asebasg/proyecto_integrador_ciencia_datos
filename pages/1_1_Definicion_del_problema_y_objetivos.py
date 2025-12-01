@@ -358,6 +358,6 @@ Navega por las siguientes secciones en el menú lateral para seguir el desarroll
 
 st.markdown("""
 <div style='text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 2rem;'>
-    <p><strong>Página 1 de 7</strong> | Siguiente: 📊 Recolección de Datos</p>
+    <p><strong>Página 1 de 7</strong></p>
 </div>
 """, unsafe_allow_html=True)

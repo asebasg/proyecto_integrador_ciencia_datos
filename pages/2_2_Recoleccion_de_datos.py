@@ -86,7 +86,7 @@ with col_fuente2:
 
 
 # 2. Metadatos del dataset
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("## 📈 Metadatos del Dataset")
 
 # Mostrar métricas principales en 4 columnas
@@ -148,7 +148,7 @@ with col7:
 
 
 # 3. Diccionario de datos
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("## 📋 Diccionario de Datos")
 
 st.markdown("""
@@ -213,7 +213,7 @@ columnas_info = {
     },
     'NumeroCasos': {
         'tipo': 'Entero (int16)',
-        'descripcion': '**VARIABLE OBJETIVO:** Número de casos de suicidio registrados',
+        'descripcion': 'Variable objetivo: Número de casos de suicidio registrados',
         'ejemplo': '0, 1, 5, 246',
         'valores_unicos': f"Rango: {df['NumeroCasos'].min()}-{df['NumeroCasos'].max()}"
     }
@@ -239,7 +239,7 @@ st.dataframe(
 
 
 # 4. Calidad de datos
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("## ✅ Validación de Calidad de Datos")
 
 # Verificar duplicados
@@ -288,15 +288,15 @@ with col_stats4:
 
 
 # 5. Proceso de recolección
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("## 📥 Proceso de Recolección")
 
 st.markdown("""
 <div style='background-color: #f1f5f9; padding: 1.5rem; border-radius: 10px;'>
     <h3 style='margin-top: 0; color: #1e3a8a;'>Metodología de Obtención de Datos</h3>
     <ol style='font-size: 1rem; line-height: 1.8;'>
-        <li><strong>Solicitud formal:</strong> Datos solicitados a la Secretaría de Salud de Antioquia</li>
-        <li><strong>Formato de entrega:</strong> Archivo CSV estructurado</li>
+        <li><strong>Solicitud formal:</strong> Datos obtenidos desde <a href=" https://www.datos.gov.co/">Datos Abiertos Colombia</a>.</li>
+        <li><strong>Formato de descarga:</strong> Archivo CSV estructurado</li>
         <li><strong>Validación inicial:</strong> Verificación de integridad y completitud</li>
         <li><strong>Almacenamiento:</strong> Guardado en <code>static/datasets/suicidios_antioquia.csv</code></li>
         <li><strong>Control de versión:</strong> Registro en sistema Git para trazabilidad</li>
@@ -307,7 +307,7 @@ st.markdown("""
 
 
 # 6. Muestra de datos
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("## 👀 Vista Previa de los Datos")
 
 st.markdown("### 📄 Primeros 10 Registros")
@@ -318,10 +318,10 @@ st.dataframe(df.tail(10), use_container_width=True)
 
 
 # Footer
-st.markdown("<br><br>")
+st.markdown("<br><br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #64748b; font-size: 0.9rem;'>
-    <p><strong>Página 2 de 7</strong> | Siguiente: 🔍 Exploración Inicial (EDA)</p>
+    <p><strong>Página 2 de 7</strong></p>
 </div>
 """, unsafe_allow_html=True)

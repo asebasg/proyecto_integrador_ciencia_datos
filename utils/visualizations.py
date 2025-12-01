@@ -29,7 +29,7 @@ COLORES = {
 }
 
 #  Paleta para regiones
-COLORES_REGIONES = {
+COLORES_REGIONES = [
     '#1e3a8a',  # Azul oscuro
     '#3b82f6',  # Azul medio
     '#60a5fa',  # Azul claro
@@ -39,7 +39,7 @@ COLORES_REGIONES = {
     '#ef4444',  # Rojo
     '#8b5cf6',  # Morado
     '#ec4899'   # Rosa
-}
+]
 
 #  Función 1: Gráfico de línea (tendencias)
 def crear_grafico_tendencia(
