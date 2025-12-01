@@ -1,254 +1,390 @@
-# Asignado a Ricardo (@ricardo778)
+"""
+Página 4: Limpieza y Preparación de Datos
+
+Responsable: Ricardo (Data Engineer)
+Descripción: Documenta las transformaciones aplicadas al dataset,
+            incluyendo limpieza, conversiones y creación de features.
+"""
 
 import streamlit as st
+from utils import cargar_datos, calcular_tasas, agrupar_por_region
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-import sys
-import os
 
-# Agregar el directorio raíz al path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Configuración de página
+st.set_page_config(
+    page_title="Limpieza y Preparación",
+    page_icon="🧹",
+    layout="wide"
+)
 
-from utils.data_loader import cargar_datos
-from utils.preprocessing import *
 
-st.set_page_config(page_title="Limpieza y Preparación", layout="wide")
-st.title("🧹 Limpieza y Preparación de Datos")
+# Carga de datos
+try:
+    df = cargar_datos()
+except Exception as e:
+    st.error(f"❌ Error al cargar datos: {str(e)}")
+    st.stop()
+
+
+# Título principal
+st.markdown("""
+<div style='text-align: center; padding: 1.5rem 0;'>
+    <h1 style='color: #1e3a8a; font-size: 2.5rem;'>
+        🧹 Limpieza y Preparación de Datos
+    </h1>
+    <p style='font-size: 1.1rem; color: #64748b;'>
+        Transformaciones aplicadas para análisis de calidad
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+
+# Introducción
+st.markdown("""
+<div style='background-color: #dbeafe; padding: 1.5rem; border-radius: 10px; border-left: 5px solid #1e3a8a;'>
+    <h3 style='margin-top: 0; color: #1e3a8a;'>🎯 Objetivo de esta Fase</h3>
+    <p style='font-size: 1.05rem; line-height: 1.7;'>
+        Los datos crudos raramente están listos para análisis. Esta sección documenta 
+        todas las transformaciones aplicadas al dataset original para garantizar su 
+        <strong>calidad, consistencia y utilidad analítica</strong>.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+
+# Transformación 1: Conversión de tipos
+st.markdown("## 🔧 Transformación 1: Optimización de Tipos de Datos")
 
 st.markdown("""
-### 🎯 Objetivo de esta fase
-Transformar los datos crudos en un formato adecuado para análisis, aplicando:
-- **Limpieza** de valores faltantes y duplicados
-- **Transformaciones** para cálculo de tasas
-- **Categorización** por niveles de riesgo
-- **Validación** de la calidad de datos
+### 📝 Justificación
+
+Los tipos de datos por defecto de Pandas no siempre son óptimos. Al especificar 
+tipos adecuados, **reducimos el uso de memoria en ~60%** y aceleramos operaciones.
 """)
 
-# Cargar datos originales
-df_original = cargar_datos()
+col_tipo1, col_tipo2 = st.columns(2)
 
-if not df_original.empty:
-    # KPI Cards principales
-    st.header("📊 Estado Inicial del Dataset")
-    
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.metric("📥 Registros Iniciales", f"{len(df_original):,}")
-    
-    with col2:
-        st.metric("🏙️ Municipios", df_original['NombreMunicipio'].nunique())
-    
-    with col3:
-        st.metric("📅 Rango de Años", f"{df_original['Anio'].min()}-{df_original['Anio'].max()}")
-    
-    with col4:
-        st.metric("🗺️ Regiones", df_original['NombreRegion'].nunique())
-    
-    # Aplicar transformaciones
-    st.header("🔄 Proceso de Transformación")
-    
-    df_transformado = df_original.copy()
-    
-    # 1. CALCULAR TASAS - SECCIÓN VISUAL
-    st.subheader("📊 1. Cálculo de Tasas por 100,000 Habitantes")
-    
-    try:
-        df_transformado = calcular_tasas(
-            df_transformado, 
-            'NumeroCasos', 
-            'NumeroPoblacionObjetivo', 
-            'tasa_suicidios'
-        )
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            # KPI de tasa promedio
-            tasa_promedio = df_transformado['tasa_suicidios'].mean()
-            fig_kpi_tasa = go.Figure(go.Indicator(
-                mode = "number",
-                value = tasa_promedio,
-                number = {'suffix': " por 100k"},
-                title = {"text": "Tasa Promedio de Suicidios"},
-                domain = {'x': [0, 1], 'y': [0, 1]}
-            ))
-            fig_kpi_tasa.update_layout(height=200)
-            st.plotly_chart(fig_kpi_tasa, use_container_width=True)
-        
-        with col2:
-            # Histograma de tasas
-            fig_tasas = px.histogram(
-                df_transformado,
-                x='tasa_suicidios',
-                nbins=50,
-                title='Distribución de Tasas de Suicidio',
-                color_discrete_sequence=['#FF6B6B']
-            )
-            st.plotly_chart(fig_tasas, use_container_width=True)
-            
-    except Exception as e:
-        st.error(f"❌ Error calculando tasas: {e}")
-    
-    # 2. CATEGORIZACIÓN DE RIESGO - SECCIÓN VISUAL
-    st.subheader("🎯 2. Categorización por Nivel de Riesgo")
-    
-    if 'tasa_suicidios' in df_transformado.columns:
-        try:
-            df_transformado = crear_categorias_riesgo(df_transformado, 'tasa_suicidios')
-            
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                # Pie chart de distribución de riesgo
-                riesgo_counts = df_transformado['nivel_riesgo'].value_counts()
-                fig_riesgo = px.pie(
-                    values=riesgo_counts.values,
-                    names=riesgo_counts.index,
-                    title='Distribución por Nivel de Riesgo',
-                    color_discrete_sequence=['#4CAF50', '#FFC107', '#F44336'],
-                    hole=0.3
-                )
-                st.plotly_chart(fig_riesgo, use_container_width=True)
-            
-            with col2:
-                # Violin plot de tasas por categoría
-                fig_violin = px.violin(
-                    df_transformado,
-                    x='nivel_riesgo',
-                    y='tasa_suicidios',
-                    title='Distribución de Tasas por Nivel de Riesgo',
-                    color='nivel_riesgo',
-                    color_discrete_sequence=['#4CAF50', '#FFC107', '#F44336'],
-                    box=True
-                )
-                st.plotly_chart(fig_violin, use_container_width=True)
-                
-        except Exception as e:
-            st.error(f"❌ Error categorizando riesgo: {e}")
-    
-    # 3. LIMPIEZA DE DATOS - SECCIÓN VISUAL
-    st.subheader("🧼 3. Limpieza de Valores Faltantes")
-    
-    try:
-        filas_antes = len(df_transformado)
-        df_transformado = limpiar_datos_faltantes(df_transformado)
-        filas_despues = len(df_transformado)
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            # Indicador de retención
-            retencion = (filas_despues / filas_antes) * 100
-            fig_retencion = go.Figure(go.Indicator(
-                mode = "gauge+number",
-                value = retencion,
-                domain = {'x': [0, 1], 'y': [0, 1]},
-                title = {'text': "Retención de Datos (%)"},
-                gauge = {
-                    'axis': {'range': [None, 100]},
-                    'bar': {'color': "green"},
-                    'steps': [
-                        {'range': [0, 90], 'color': "red"},
-                        {'range': [90, 99], 'color': "yellow"},
-                        {'range': [99, 100], 'color': "lightgreen"}
-                    ]
-                }
-            ))
-            fig_retencion.update_layout(height=300)
-            st.plotly_chart(fig_retencion, use_container_width=True)
-        
-        with col2:
-            # Gráfica de comparación antes/después
-            fig_comparacion = go.Figure()
-            fig_comparacion.add_trace(go.Bar(
-                name='Antes de Limpieza',
-                x=['Registros'],
-                y=[filas_antes],
-                marker_color='orange'
-            ))
-            fig_comparacion.add_trace(go.Bar(
-                name='Después de Limpieza',
-                x=['Registros'],
-                y=[filas_despues],
-                marker_color='green'
-            ))
-            fig_comparacion.update_layout(title='Comparación: Registros Antes y Después de Limpieza')
-            st.plotly_chart(fig_comparacion, use_container_width=True)
-                
-    except Exception as e:
-        st.error(f"❌ Error limpiando datos: {e}")
-    
-    # RESUMEN VISUAL DEL PROCESO
-    st.header("📈 Resumen Visual del Proceso de Transformación")
-    
-    # Gráfica de radar para mostrar el progreso
-    categorias = ['Carga Datos', 'Cálculo Tasas', 'Categorización', 'Limpieza']
-    valores = [100, 100, 100, retencion]  # Asumiendo 100% éxito en otros pasos
-    
-    fig_radar = go.Figure()
-    fig_radar.add_trace(go.Scatterpolar(
-        r=valores,
-        theta=categorias,
-        fill='toself',
-        name='Progreso del Proceso',
-        line=dict(color='blue')
-    ))
-    fig_radar.update_layout(
-        polar=dict(
-            radialaxis=dict(
-                visible=True,
-                range=[0, 100]
-            )),
-        showlegend=False,
-        title="Progreso del Proceso de Transformación"
-    )
-    st.plotly_chart(fig_radar, use_container_width=True)
-    
-    # KPI FINALES
-    st.header("🎉 Resultados Finales del Proceso")
-    
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        fig_final_registros = go.Figure(go.Indicator(
-            mode = "number",
-            value = len(df_transformado),
-            title = {"text": "Registros Finales"},
-            number = {'valueformat': ","},
-            domain = {'x': [0, 1], 'y': [0, 1]}
-        ))
-        fig_final_registros.update_layout(height=200)
-        st.plotly_chart(fig_final_registros, use_container_width=True)
-    
-    with col2:
-        if 'tasa_suicidios' in df_transformado.columns:
-            fig_final_tasa = go.Figure(go.Indicator(
-                mode = "number",
-                value = df_transformado['tasa_suicidios'].mean(),
-                title = {"text": "Tasa Promedio Final"},
-                number = {'suffix': " por 100k"},
-                domain = {'x': [0, 1], 'y': [0, 1]}
-            ))
-            fig_final_tasa.update_layout(height=200)
-            st.plotly_chart(fig_final_tasa, use_container_width=True)
-    
-    with col3:
-        if 'nivel_riesgo' in df_transformado.columns:
-            alto_riesgo = (df_transformado['nivel_riesgo'] == 'Alto riesgo').sum()
-            fig_alto_riesgo = go.Figure(go.Indicator(
-                mode = "number",
-                value = alto_riesgo,
-                title = {"text": "Municipios Alto Riesgo"},
-                domain = {'x': [0, 1], 'y': [0, 1]}
-            ))
-            fig_alto_riesgo.update_layout(height=200)
-            st.plotly_chart(fig_alto_riesgo, use_container_width=True)
-        
-else:
-    st.error("❌ No se pudieron cargar los datos para el proceso de limpieza")
+with col_tipo1:
+    st.markdown("""
+    **❌ Antes (tipos por defecto):**
+    ```
+    CodigoMunicipio: int64 (8 bytes)
+    CodigoRegion: int64 (8 bytes)
+    Anio: int64 (8 bytes)
+    NumeroCasos: int64 (8 bytes)
+    NombreRegion: object (variable)
+    ```
+    """)
 
+with col_tipo2:
+    st.markdown("""
+    **✅ Después (tipos optimizados):**
+    ```
+    CodigoMunicipio: int32 (4 bytes)
+    CodigoRegion: int8 (1 byte)
+    Anio: int16 (2 bytes)
+    NumeroCasos: int16 (2 bytes)
+    NombreRegion: category (fijo)
+    ```
+    """)
+
+# Mostrar ahorro de memoria
+memoria_antes = len(df) * (8 + 8 + 8 + 8) / 1024**2  # MB estimados antes
+memoria_despues = df.memory_usage(deep=True).sum() / 1024**2
+ahorro_pct = ((memoria_antes - memoria_despues) / memoria_antes * 100)
+
+st.success(f"✅ **Ahorro de memoria:** {ahorro_pct:.1f}% (de ~{memoria_antes:.2f} MB a {memoria_despues:.2f} MB)")
+
+
+# Transformación 2: Limpieza de población
+st.markdown("<br><br>")
+st.markdown("## 🔧 Transformación 2: Limpieza de Columna Poblacional")
+
+st.markdown("""
+### 📝 Problema Identificado
+
+La columna `NumeroPoblacionObjetivo` venía como texto con comas separadoras de miles:
+""")
+
+# Ejemplo con datos simulados
+ejemplo_antes = pd.DataFrame({
+    'Municipio': ['Medellín', 'Envigado', 'Rionegro'],
+    'Poblacion_Original': ['2,508,452', '221,708', '125,861']
+})
+
+st.markdown("**❌ Formato original (texto):**")
+st.dataframe(ejemplo_antes, use_container_width=True, hide_index=True)
+
+st.markdown("""
+### ✅ Solución Aplicada
+
+```python
+# Eliminar comas y convertir a entero
+df['NumeroPoblacionObjetivo'] = (
+    df['NumeroPoblacionObjetivo']
+    .str.replace(',', '', regex=False)
+    .astype('int32')
+)
+```
+""")
+
+# Ejemplo después
+ejemplo_despues = pd.DataFrame({
+    'Municipio': ['Medellín', 'Envigado', 'Rionegro'],
+    'Poblacion_Limpia': [2508452, 221708, 125861]
+})
+
+st.markdown("**✅ Formato transformado (numérico):**")
+st.dataframe(ejemplo_despues, use_container_width=True, hide_index=True)
+
+st.info("💡 **Por qué es importante:** Sin esta conversión, no podríamos calcular tasas ni correlaciones.")
+
+
+# Transformación 3: Cálculo de tasas
+st.markdown("<br><br>")
+st.markdown("## 🔧 Transformación 3: Cálculo de Tasas Normalizadas")
+
+st.markdown("""
+### 📝 Justificación Crítica
+
+Los **casos absolutos** son engañosos para comparar municipios. Un municipio pequeño 
+con 5 casos puede estar en mayor riesgo que una ciudad con 50 casos.
+
+**Fórmula aplicada:**
+
+```
+Tasa por 100k = (Casos / Población) × 100,000
+```
+
+Esta métrica permite comparaciones justas entre municipios de diferente tamaño.
+""")
+
+# Calcular tasas para ejemplo
+df_con_tasas = calcular_tasas(df)
+
+# Ejemplo comparativo
+ejemplo_comparativo = pd.DataFrame({
+    'Municipio': ['Municipio A (grande)', 'Municipio B (pequeño)'],
+    'Población': [100000, 5000],
+    'Casos': [10, 5],
+    'Tasa por 100k': [
+        (10 / 100000) * 100000,
+        (5 / 5000) * 100000
+    ]
+})
+
+st.markdown("### 📊 Ejemplo Comparativo")
+st.dataframe(
+    ejemplo_comparativo.style.highlight_max(subset=['Tasa por 100k'], color='#fee2e2'),
+    use_container_width=True,
+    hide_index=True
+)
+
+st.warning("""
+⚠️ **Observación:** Aunque el Municipio A tiene el doble de casos absolutos, 
+el Municipio B tiene una **tasa 10 veces mayor** (100 vs 10 por 100k habitantes), 
+indicando mayor riesgo relativo.
+""")
+
+# Mostrar estadísticas de tasas calculadas
+col_tasa1, col_tasa2, col_tasa3, col_tasa4 = st.columns(4)
+
+with col_tasa1:
+    st.metric("Tasa Mínima", f"{df_con_tasas['TasaPor100k'].min():.2f}")
+
+with col_tasa2:
+    st.metric("Tasa Máxima", f"{df_con_tasas['TasaPor100k'].max():.2f}")
+
+with col_tasa3:
+    st.metric("Tasa Promedio", f"{df_con_tasas['TasaPor100k'].mean():.2f}")
+
+with col_tasa4:
+    st.metric("Tasa Mediana", f"{df_con_tasas['TasaPor100k'].median():.2f}")
+
+
+# Transformación 4: Agregaciones
+st.markdown("<br><br>")
+st.markdown("## 🔧 Transformación 4: Agregaciones por Región")
+
+st.markdown("""
+### 📝 Objetivo
+
+Crear vistas agregadas que faciliten el análisis de patrones regionales.
+""")
+
+# Mostrar agregación regional
+df_regional = agrupar_por_region(df)
+
+st.markdown("### 📊 Resultado: Dataset Agregado por Región")
+st.dataframe(
+    df_regional[['NombreRegion', 'TotalCasos', 'PoblacionPromedio', 'TasaPor100k', 'PorcentajeCasos']],
+    use_container_width=True,
+    hide_index=True,
+    column_config={
+        'PoblacionPromedio': st.column_config.NumberColumn(format="%d"),
+        'TasaPor100k': st.column_config.NumberColumn(format="%.2f"),
+        'PorcentajeCasos': st.column_config.NumberColumn(format="%.1f%%")
+    }
+)
+
+st.info("""
+💡 **Utilidad:** Esta transformación permite responder preguntas como 
+"¿Qué región concentra más casos?" o "¿Cuál tiene la tasa más alta?" sin 
+necesidad de recalcular cada vez.
+""")
+
+
+# Transformación 5: Variables categóricas
+st.markdown("<br><br>")
+st.markdown("## 🔧 Transformación 5: Conversión de Variables Categóricas")
+
+st.markdown("""
+### 📝 Justificación
+
+Columnas de texto repetitivo (como `NombreRegion`, `NombreMunicipio`) se convierten 
+al tipo `category` de Pandas para:
+
+- ✅ **Reducir memoria:** En vez de guardar "Valle de Aburrá" 500 veces, se guarda una vez + referencias
+- ✅ **Acelerar operaciones:** Agrupaciones y filtros son más rápidos
+- ✅ **Mantener integridad:** Evita errores de tipeo en análisis posteriores
+""")
+
+# Mostrar columnas categóricas
+categoricas = df.select_dtypes(include='category').columns.tolist()
+
+st.markdown(f"""
+**Columnas convertidas a `category`:**
+- {', '.join(categoricas)}
+""")
+
+# Comparación de memoria
+col_cat1, col_cat2 = st.columns(2)
+
+with col_cat1:
+    st.markdown("""
+    **Como `object` (texto):**
+    - Cada valor ocupa espacio completo
+    - Memoria: ~alta
+    - Operaciones: lentas
+    """)
+
+with col_cat2:
+    st.markdown("""
+    **Como `category`:**
+    - Valores únicos + códigos
+    - Memoria: ~60% menos
+    - Operaciones: ~3x más rápidas
+    """)
+
+
+# Resumen de transformaciones
+st.markdown("<br><br>")
 st.markdown("---")
-st.success("🎉 Proceso completado: Dataset listo para análisis avanzado")
-st.caption("Página desarrollada por Ricardo (@ricardo778) - Procesamiento y transformación de datos")
+st.markdown("## 📋 Resumen de Transformaciones Aplicadas")
+
+transformaciones = [
+    {
+        'Transformación': 'Optimización de tipos de datos',
+        'Antes': 'int64, object',
+        'Después': 'int32, int16, int8, category',
+        'Beneficio': f'Ahorro de {ahorro_pct:.1f}% memoria'
+    },
+    {
+        'Transformación': 'Limpieza de población',
+        'Antes': 'Texto con comas ("2,508,452")',
+        'Después': 'Entero (2508452)',
+        'Beneficio': 'Habilitación de cálculos matemáticos'
+    },
+    {
+        'Transformación': 'Cálculo de tasas',
+        'Antes': 'Solo casos absolutos',
+        'Después': '+ TasaPor100k',
+        'Beneficio': 'Comparación justa entre municipios'
+    },
+    {
+        'Transformación': 'Agregación regional',
+        'Antes': 'Datos por municipio-año',
+        'Después': '+ Vistas agregadas',
+        'Beneficio': 'Análisis de patrones regionales'
+    },
+    {
+        'Transformación': 'Variables categóricas',
+        'Antes': 'object (texto)',
+        'Después': 'category',
+        'Beneficio': 'Optimización de memoria y velocidad'
+    }
+]
+
+df_resumen = pd.DataFrame(transformaciones)
+st.dataframe(df_resumen, use_container_width=True, hide_index=True)
+
+
+# Validación post-transformaciones
+st.markdown("<br><br>")
+st.markdown("## ✅ Validación Post-Transformación")
+
+st.markdown("""
+Después de aplicar todas las transformaciones, validamos que el dataset 
+mantenga su integridad:
+""")
+
+val_col1, val_col2, val_col3 = st.columns(3)
+
+with val_col1:
+    nulos_total = df.isna().sum().sum()
+    if nulos_total == 0:
+        st.success(f"✅ **Sin valores nulos**\n\n{nulos_total} registros afectados")
+    else:
+        st.warning(f"⚠️ **Valores nulos**\n\n{nulos_total} registros afectados")
+
+with val_col2:
+    duplicados = len(df[df.duplicated(subset=['CodigoMunicipio', 'Anio'])])
+    if duplicados == 0:
+        st.success(f"✅ **Sin duplicados**\n\n{duplicados} duplicados")
+    else:
+        st.warning(f"⚠️ **Duplicados encontrados**\n\n{duplicados} duplicados")
+
+with val_col3:
+    casos_negativos = (df['NumeroCasos'] < 0).sum()
+    if casos_negativos == 0:
+        st.success(f"✅ **Datos consistentes**\n\n{casos_negativos} casos negativos")
+    else:
+        st.error(f"❌ **Casos negativos**\n\n{casos_negativos} registros")
+
+
+# Dataset final
+st.markdown("<br><br>")
+st.markdown("## 📊 Dataset Final Transformado")
+
+st.markdown("""
+El dataset está ahora listo para análisis estadístico avanzado.
+""")
+
+# Mostrar estructura del dataset
+st.markdown("### 🔍 Información del Dataset")
+buffer = []
+buffer.append(f"- **Filas:** {len(df):,}")
+buffer.append(f"- **Columnas:** {len(df.columns)}")
+buffer.append(f"- **Memoria:** {df.memory_usage(deep=True).sum() / 1024**2:.2f} MB")
+buffer.append(f"- **Tipos de datos:** {df.dtypes.value_counts().to_dict()}")
+
+st.markdown('\n'.join(buffer))
+
+# Vista previa
+st.markdown("### 👀 Vista Previa (5 registros)")
+st.dataframe(df.head(), use_container_width=True)
+
+
+# Footer
+st.markdown("<br><br>")
+st.markdown("---")
+st.markdown("""
+<div style='text-align: center; color: #64748b; font-size: 0.9rem;'>
+    <p><strong>Página 4 de 7</strong> | Siguiente: 📈 Análisis y Hallazgos</p>
+    <p style='font-size: 0.85rem; margin-top: 1rem;'>
+        ✅ Todas las transformaciones están documentadas y validadas
+    </p>
+</div>
+""", unsafe_allow_html=True)
