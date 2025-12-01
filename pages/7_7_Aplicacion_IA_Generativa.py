@@ -1,3 +1,5 @@
+# Asignado a Sebastián (@asebasg)
+
 import streamlit as st
 
 st.title("Aplicación IA Generativa (Gemini)")
