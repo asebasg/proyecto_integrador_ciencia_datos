@@ -28,7 +28,8 @@ from utils import (
     cargar_datos,
     calcular_tasas,
     calcular_estadisticas_descriptivas,
-    obtener_ranking_municipios
+    obtener_ranking_municipios,
+    matriz_correlaciones
 )
 
 # Configuración de página
@@ -124,7 +125,7 @@ with col_info4:
 
 
 # Sección 2: Estadísticas descriptivas
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<br><br>")
 st.markdown("## 📊 Estadísticas Descriptivas")
 
 st.markdown("""
@@ -181,7 +182,7 @@ if estadisticas_completas:
 
 
 # Sección 3: Distribución de casos
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<br><br>")
 st.markdown("## 📈 Distribución de Variables")
 
 st.markdown("""
@@ -249,7 +250,7 @@ with st.expander("📋 Ver municipios con casos atípicamente altos"):
 
 
 # Sección 4: TOP municipios
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<br><br>")
 st.markdown("## 🏆 Ranking de Municipios")
 
 st.markdown("""
@@ -305,7 +306,7 @@ concentración urbana** que requiere análisis más profundo.
 
 
 # Sección 5: Distribución temporal
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<br><br>")
 st.markdown("## 📅 Análisis Temporal")
 
 st.markdown("""
@@ -365,7 +366,7 @@ y {casos_por_anio.iloc[-1]['Anio']}, con una **pendiente positiva clara** en la 
 
 
 # Sección6: matriz de correlaciones
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<br><br>")
 st.markdown("## 🔗 Correlaciones entre Variables")
 
 st.markdown("""
@@ -377,7 +378,7 @@ ausencia de correlación lineal.
 
 # Calcular matriz de correlaciones
 columnas_corr = ['NumeroCasos', 'NumeroPoblacionObjetivo', 'TasaPor100k']
-matriz_corr = df[columnas_corr].corr()
+matriz_corr = matriz_correlaciones(df, columnas_corr)
 
 # Heatmap de correlaciones
 fig_corr = px.imshow(
@@ -406,7 +407,7 @@ st.markdown("""
 
 
 # Conclusiones del EDA
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<br><br>")
 st.markdown("---")
 st.markdown("## 💡 Conclusiones del Análisis Exploratorio")
 
@@ -414,25 +415,35 @@ st.markdown("""
 <div style='background-color: #f1f5f9; padding: 1.5rem; border-radius: 10px;'>
     <h3 style='margin-top: 0; color: #1e3a8a;'>Hallazgos Principales del EDA</h3>
     <ol style='font-size: 1.05rem; line-height: 1.8;'>
-        <li><strong>Concentración extrema:</strong> Medellín y Valle de Aburrá concentran la mayoría de casos absolutos.</li>
-        <li><strong>Tendencia creciente:</strong> Incremento sostenido del 79% en 20 años, con aceleración en años recientes.</li>
-        <li><strong>Distribución asimétrica:</strong> La mayoría de municipios tienen pocos casos, pero existen outliers significativos.</li>
-        <li><strong>Correlación poblacional:</strong> Existe relación casi perfecta (r≈0.99) entre población y casos absolutos.</li>
-        <li><strong>Necesidad de normalización:</strong> Las tasas por 100k habitantes son esenciales para comparaciones justas.</li>
+        <li><strong>Concentración extrema:</strong> Medellín y Valle de Aburrá concentran 
+            la mayoría de casos absolutos.</li>
+        
+        <li><strong>Tendencia creciente:</strong> Incremento sostenido del 79% en 20 años, 
+            con aceleración en años recientes.</li>
+        
+        <li><strong>Distribución asimétrica:</strong> La mayoría de municipios tienen pocos casos, 
+            pero existen outliers significativos.</li>
+        
+        <li><strong>Correlación poblacional:</strong> Existe relación casi perfecta (r≈0.99) 
+            entre población y casos absolutos.</li>
+        
+        <li><strong>Necesidad de normalización:</strong> Las tasas por 100k habitantes son 
+            esenciales para comparaciones justas.</li>
     </ol>
+    
     <p style='margin-bottom: 0; margin-top: 1rem;'>
-        <strong>🎯 Próximos pasos:</strong> Los insights del EDA guiarán la limpieza de datos (Página 4) y el análisis estadístico profundo (Página 5).
+        <strong>🎯 Próximos pasos:</strong> Los insights del EDA guiarán la limpieza de datos 
+        (Página 4) y el análisis estadístico profundo (Página 5).
     </p>
 </div>
 """, unsafe_allow_html=True)
 
 
 # Footer
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<br><br>")
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #64748b; font-size: 0.9rem;'>
-    <p><strong>Página 3 de 7</strong> <br>
-    Siguiente: 🧹 Limpieza y Preparación de Datos</p>
+    <p><strong>Página 3 de 7</strong> | Siguiente: 🧹 Limpieza y Preparación de Datos</p>
 </div>
 """, unsafe_allow_html=True)
