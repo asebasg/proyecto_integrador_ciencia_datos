@@ -8,7 +8,7 @@
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.31.0-FF4B4B)](https://streamlit.io/)
 [![License](https://img.shields.io/badge/License-Academic-green)](LICENSE)
 
-Análisis y Desarrollo de Software (ADSO) - 2025
+Análisis y Desarrollo de Software (ADSO) - 2025 <br>
 📍 Centro de Tecnología de la Manufactura Avanzada, Medellín, Antioquia
 
 </div>
