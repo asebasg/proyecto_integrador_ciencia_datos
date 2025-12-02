@@ -235,8 +235,8 @@ def identificar_municipios_alto_riesgo(
         'PoblacionPromedio', 'TasaPromedioPor100k'
     ]
     
-    # Formatear
-    resultado['PoblacionPromedio'] = resultado['PoblacionPromedio'].astype(int)
+    # Formatear (manejar NaN antes de convertir a int)
+    resultado['PoblacionPromedio'] = resultado['PoblacionPromedio'].fillna(0).astype(int)
     resultado['TasaPromedioPor100k'] = resultado['TasaPromedioPor100k'].round(2)
     
     # Ordenar por tasa descendente (más riesgosos primero)

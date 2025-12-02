@@ -99,7 +99,7 @@ st.success(f"✅ **Ahorro de memoria:** {ahorro_pct:.1f}% (de ~{memoria_antes:.2
 
 
 # Transformación 2: Limpieza de población
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("## 🔧 Transformación 2: Limpieza de Columna Poblacional")
 
 st.markdown("""
@@ -139,11 +139,11 @@ ejemplo_despues = pd.DataFrame({
 st.markdown("**✅ Formato transformado (numérico):**")
 st.dataframe(ejemplo_despues, use_container_width=True, hide_index=True)
 
-st.info("💡 **Por qué es importante:** Sin esta conversión, no podríamos calcular tasas ni correlaciones.")
+st.info("💡 **¿Por qué es importante?** Sin esta conversión, no podríamos calcular tasas ni correlaciones.")
 
 
 # Transformación 3: Cálculo de tasas
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("## 🔧 Transformación 3: Cálculo de Tasas Normalizadas")
 
 st.markdown("""
@@ -205,7 +205,7 @@ with col_tasa4:
 
 
 # Transformación 4: Agregaciones
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("## 🔧 Transformación 4: Agregaciones por Región")
 
 st.markdown("""
@@ -237,7 +237,7 @@ necesidad de recalcular cada vez.
 
 
 # Transformación 5: Variables categóricas
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("## 🔧 Transformación 5: Conversión de Variables Categóricas")
 
 st.markdown("""
@@ -280,7 +280,7 @@ with col_cat2:
 
 
 # Resumen de transformaciones
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("## 📋 Resumen de Transformaciones Aplicadas")
 
@@ -322,7 +322,7 @@ st.dataframe(df_resumen, use_container_width=True, hide_index=True)
 
 
 # Validación post-transformaciones
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("## ✅ Validación Post-Transformación")
 
 st.markdown("""
@@ -355,7 +355,7 @@ with val_col3:
 
 
 # Dataset final
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("## 📊 Dataset Final Transformado")
 
 st.markdown("""
@@ -364,27 +364,59 @@ El dataset está ahora listo para análisis estadístico avanzado.
 
 # Mostrar estructura del dataset
 st.markdown("### 🔍 Información del Dataset")
-buffer = []
-buffer.append(f"- **Filas:** {len(df):,}")
-buffer.append(f"- **Columnas:** {len(df.columns)}")
-buffer.append(f"- **Memoria:** {df.memory_usage(deep=True).sum() / 1024**2:.2f} MB")
-buffer.append(f"- **Tipos de datos:** {df.dtypes.value_counts().to_dict()}")
+# Métricas en columnas (visual y limpio)
+col1, col2, col3, col4 = st.columns(4)
 
-st.markdown('\n'.join(buffer))
+with col1:
+    st.metric("📊 Filas", f"{len(df):,}")
+
+with col2:
+    st.metric("📋 Columnas", len(df.columns))
+
+with col3:
+    memoria_mb = df.memory_usage(deep=True).sum() / 1024**2
+    st.metric("💾 Memoria", f"{memoria_mb:.2f} MB")
+
+with col4:
+    tipos_unicos = df.dtypes.nunique()
+    st.metric("🔢 Tipos de Datos", tipos_unicos)
+
+# Desglose de tipos en expander (oculto por defecto)
+with st.expander("📊 Ver Desglose de Tipos de Datos"):
+    tipos_datos = df.dtypes.value_counts()
+    
+    # Crear DataFrame limpio
+    df_tipos = pd.DataFrame({
+        'Tipo': [str(t) for t in tipos_datos.index],
+        'Columnas': tipos_datos.values,
+        'Porcentaje': (tipos_datos.values / len(df.columns) * 100).round(1)
+    })
+    
+    st.dataframe(
+        df_tipos,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            'Porcentaje': st.column_config.NumberColumn(format="%.1f%%")
+        }
+    )
 
 # Vista previa
 st.markdown("### 👀 Vista Previa (5 registros)")
 st.dataframe(df.head(), use_container_width=True)
 
+st.markdown("""
+<p style='font-size: 1rem; margin-top: 1rem; text-align:center;'>
+    ✅ Todas las transformaciones están documentadas y validadas
+</p>
+""", unsafe_allow_html=True)
 
 # Footer
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #64748b; font-size: 0.9rem;'>
-    <p><strong>Página 4 de 7</strong> | Siguiente: 📈 Análisis y Hallazgos</p>
-    <p style='font-size: 0.85rem; margin-top: 1rem;'>
-        ✅ Todas las transformaciones están documentadas y validadas
-    </p>
+    <p><strong>Página 4 de 7</strong> <br>
+    Siguiente: 📈 Análisis y Hallazgos</p>
 </div>
 """, unsafe_allow_html=True)

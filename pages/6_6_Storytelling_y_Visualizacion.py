@@ -128,7 +128,7 @@ con el pico histórico en 2023 (586 casos). Se requieren intervenciones urgentes
 """)
 
 #  Hallazgo 2: Epicentro urbano
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("""
 ## 🏙️ Hallazgo 2: El Valle de Aburrá como Epicentro
@@ -164,7 +164,7 @@ por habitante revelan otra historia (ver Hallazgo 3).
 """)
 
 #  Hallazgo 3: Municipios pequeños en riesgo
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("""
 ## ⚠️ Hallazgo 3: Municipios Pequeños con Tasas Desproporcionadas
@@ -206,7 +206,7 @@ else:
     st.warning("⚠️ No se encontraron municipios pequeños con tasas altas en este análisis.")
 
 #  Hallazgo 4: Correlación poblacional
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("""
 ## 📊 Hallazgo 4: Relación Casi Perfecta entre Población y Casos
@@ -236,6 +236,17 @@ fig_correlacion = crear_grafico_dispersion(
 st.plotly_chart(fig_correlacion, use_container_width=True)
 
 # Métricas de correlación
+st.markdown("""
+    <style>
+    [data-testid="stMetricValue"] {
+        font-size: 1.5rem !important;
+    }
+    [data-testid="stMetricLabel"] {
+        font-size: 0.9rem !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 col1_corr, col2_corr, col3_corr = st.columns(3)
 
 with col1_corr:
@@ -255,7 +266,7 @@ población** revelan que el riesgo individual no es uniforme (ver Hallazgo 3).
 """)
 
 #  Hallazgo 5: Evolución regional
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("""
 ## 🌐 Hallazgo 5: Dinámicas Regionales Divergentes
@@ -291,7 +302,7 @@ Lo que funciona en el Valle de Aburrá puede no ser efectivo en Urabá o el Bajo
 """)
 
 #  Hallazgo 6: Mapa de calor
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("""
 ## 🗺️ Hallazgo 6: Patrones Espaciotemporales Visibles
@@ -318,7 +329,7 @@ las últimas dos décadas.
 """)
 
 #  Hallazgo 7: TOP municipios críticos
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("""
 ## 🚨 Hallazgo 7: Los 10 Municipios que Concentran la Crisis
@@ -354,7 +365,7 @@ de salud mental en estas zonas.
 """)
 
 #  Conclusiones y recomendaciones
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("""
 ## 💡 Conclusiones Finales
@@ -429,8 +440,9 @@ st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #64748b; font-size: 0.9rem;'>
     <p><strong>Página 6 de 7</strong> | Siguiente: 🤖 IA Generativa (Opcional)</p>
-    <p style='font-size: 0.85rem; margin-top: 1rem;'>
-        📊 Este análisis se basa en datos oficiales de la Secretaría de Salud de Antioquia (2005-2024)
+    <p style='font-size: 0.95rem; margin-top: 3rem;'>
+        Este análisis se basa en datos oficiales de la Secretaría de Salud y Protección Social <br>
+            del departamento de Antioquia, Colombia; comprendido entre los años 2005 y 2024 (20 años).
     </p>
 </div>
 """, unsafe_allow_html=True)

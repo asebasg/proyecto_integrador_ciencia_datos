@@ -64,7 +64,7 @@ with col_fuente1:
     st.markdown("""
     ### 📋 Características de la Fuente
     
-    - **Entidad:** Secretaría de Salud de Antioquia
+    - **Entidad:** Secretaría de Salud y Protección Social de Antioquia
     - **Tipo:** Datos administrativos (registros oficiales)
     - **Sistema:** Sistema de Vigilancia Epidemiológica
     - **Cobertura:** 125 municipios de Antioquia
@@ -322,6 +322,7 @@ st.markdown("<br><br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #64748b; font-size: 0.9rem;'>
-    <p><strong>Página 2 de 7</strong></p>
+    <p><strong>Página 2 de 7</strong> <br>
+    Siguiente: 🔍 Exploración Inicial de Datos (EDA) </p>
 </div>
 """, unsafe_allow_html=True)

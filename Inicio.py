@@ -63,7 +63,10 @@ st.markdown("""
         📊 Análisis de Suicidios en Antioquia
     </h1>
     <p style='font-size: 1.3rem; color: #64748b; margin-top: 0.5rem;'>
-        Estudio Epidemiológico 2005-2024
+        Estudio epidemiológico
+    </p>
+    <p style='font-size: 0.9rem; color: #64748b;'>
+        Un análisis que comprende desde los años 2005 - 2024
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -81,7 +84,7 @@ st.markdown("""
     <p style='font-size: 1rem; color: #64748b; margin-bottom: 0;'>
         <strong>Fuente:</strong> Secretaría de Salud y Protección Social de Antioquia | 
         <strong>Período:</strong> 2005-2024 (20 años) | 
-        <strong>Registros:</strong> {total_registros:,}
+        <strong>Registros totales:</strong> {total_registros:,}
     </p>
 </div>
 """.format(total_registros=metadatos['total_registros']), unsafe_allow_html=True)
@@ -226,7 +229,7 @@ with col_grafico:
         df_regional,
         columna_categoria='NombreRegion',
         columna_valor='TotalCasos',
-        titulo='',
+        # titulo='',  # Título se define en visualizations.py
         tipo='dona'
     )
     st.plotly_chart(fig_regional, use_container_width=True)
@@ -329,8 +332,8 @@ with footer_col3:
 
 st.markdown("""
 <div style='text-align: center; color: #64748b; font-size: 0.85rem; margin-top: 2rem;'>
-    <p>Proyecto Integrador de Ciencia de Datos | SENA (Centro de Tecnología de la Manufactura Avanzada) | 2025</p>
-    <p>⚠️ Este análisis tiene fines académicos. Para intervenciones de salud pública, 
-    consulte fuentes oficiales y profesionales especializados.</p>
+    <strong>⚠️ Este análisis tiene fines académicos. Para intervenciones de salud pública, 
+    consulte fuentes oficiales y profesionales especializados.</strong>
+    <p>Proyecto Integrador de Ciencia de Datos - 2025</p>
 </div>
 """, unsafe_allow_html=True)

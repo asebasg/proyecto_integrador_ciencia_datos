@@ -244,7 +244,7 @@ with alcance_col1:
     
     Este proyecto **SÍ incluye:**
     
-    - ✔️ Análisis de datos oficiales de la Secretaría de Salud de Antioquia
+    - ✔️ Análisis de datos oficiales de la Secretaría de Salud y Protección Social de Antioquia
     - ✔️ Período temporal: 2005-2024 (20 años completos)
     - ✔️ Cobertura geográfica: 125 municipios en 9 regiones
     - ✔️ Estadísticas descriptivas e inferenciales
@@ -280,7 +280,7 @@ Este análisis es relevante para múltiples actores del ecosistema de salud púb
 
 stakeholders_data = [
     {
-        "actor": "🏛️ Secretaría de Salud de Antioquia",
+        "actor": "🏛️ Secretaría de Salud y Protección Social de Antioquia",
         "interes": "Diseño de políticas públicas de prevención basadas en evidencia",
         "uso": "Priorización de recursos, identificación de zonas críticas"
     },
@@ -358,6 +358,7 @@ Navega por las siguientes secciones en el menú lateral para seguir el desarroll
 
 st.markdown("""
 <div style='text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 2rem;'>
-    <p><strong>Página 1 de 7</strong></p>
+    <p><strong>Página 1 de 7</strong> <br>
+    Siguiente: 📊 Recolección de Datos</p>
 </div>
 """, unsafe_allow_html=True)

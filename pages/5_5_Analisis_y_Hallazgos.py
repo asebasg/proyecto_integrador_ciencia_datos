@@ -151,7 +151,7 @@ La tendencia es **creciente y sostenida**, con aceleración notable en la últim
 
 
 # Hallazgo 2: Concentración geográfica - regional
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("## 🗺️ Hallazgo 2: Concentración Geográfica")
 
@@ -204,7 +204,7 @@ con **{df_regional.iloc[0]['PorcentajeCasos']:.1f}%**.
 
 
 # Hallazgo 3: Municipios pequeños en riesgo
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("## ⚠️ Hallazgo 3: Municipios Pequeños con Tasas Desproporcionadas")
 
@@ -254,7 +254,7 @@ else:
 
 
 # Hallazgo 4: Correlación poblacional
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("## 📊 Hallazgo 4: Correlación Población vs. Casos")
 
@@ -270,10 +270,18 @@ resultado_corr = calcular_correlacion(df, 'NumeroPoblacionObjetivo', 'NumeroCaso
 col1_h4, col2_h4, col3_h4 = st.columns(3)
 
 with col1_h4:
-    st.metric("Coeficiente (r)", f"{resultado_corr['coeficiente']:.4f}")
+    st.metric(
+        label="Coeficiente (r)", 
+        value=f"{resultado_corr['coeficiente']:.4f}",
+        help="Mide la fuerza y dirección de la relación lineal entre dos variables. Valores cercanos a 1 o -1 indican correlación fuerte; cercanos a 0 indican correlación débil o nula."
+        )
 
 with col2_h4:
-    st.metric("P-value", f"{resultado_corr['p_value']:.6f}")
+    st.metric(
+        label="P-value", 
+        value=f"{resultado_corr['p_value']:.6f}",
+        help="Probabilidad de obtener estos resultados por azar. Un valor < 0.05 indica que la correlación es estadísticamente significativa (no ocurrió por casualidad)."
+        )
 
 with col3_h4:
     significancia = "✅ Significativo" if resultado_corr['significativo'] else "❌ No significativo"
@@ -304,7 +312,7 @@ población y casos absolutos. A mayor población, mayor número de casos, de for
 
 
 # Hallazgo 5: Períodos críticos
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("## 🔥 Hallazgo 5: Períodos Críticos de Incremento")
 
@@ -351,7 +359,7 @@ aceleración sostenida, con el quinquenio 2020-2024 alcanzando el promedio anual
 
 
 # Hallazgo 6: Ranking prioritario
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("## 🎯 Hallazgo 6: Municipios que Requieren Intervención Prioritaria")
 
@@ -397,7 +405,7 @@ except Exception as e:
 
 
 # Hallazgo 7: Promedio departamental
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("## 📊 Hallazgo 7: Tasa Departamental Promedio")
 
@@ -449,7 +457,7 @@ representando un incremento del **{incremento_tasa:.1f}%**.
 
 
 # Conclusiones finales
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("## 💡 Síntesis de Hallazgos")
 
@@ -470,10 +478,11 @@ st.markdown("""
 
 
 # Footer
-st.markdown("<br><br>")
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #64748b; font-size: 0.9rem;'>
-    <p><strong>Página 5 de 7</strong> | Siguiente: 📢 Storytelling y Visualización</p>
+    <p><strong>Página 5 de 7</strong> <br>
+    Siguiente: 📢 Storytelling y Visualización</p>
 </div>
 """, unsafe_allow_html=True)
