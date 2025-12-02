@@ -1,3 +1,87 @@
-# Asignado a Sebastián (@asebasg)
+# CONFIGURACIÓN VISUAL DE STREAMLIT
+# Proyecto: Análisis de Suicidios en Antioquia
+# Responsable: Sebastián (Líder)
+# ========================================
 
+[theme]
+# PALETA DE COLORES PROFESIONAL
+# Para tema sensible (suicidios), usamos colores sobrios y serios
+
+# Color primario: Azul oscuro (botones, enlaces, elementos interactivos)
+# Transmite: Seriedad, profesionalismo, confianza
+primaryColor = "#1e3a8a"
+
+# Color de fondo principal: Blanco puro (limpio y accesible)
+backgroundColor = "#ffffff"
+
+# Color de fondo secundario: Gris claro (sidebar, cards, secciones)
+# Proporciona contraste sutil sin ser agresivo
+secondaryBackgroundColor = "#f1f5f9"
+
+# Color de texto: Gris oscuro (alta legibilidad, menos cansancio visual)
+textColor = "#1f2937"
+
+# Fuente: Sans-serif moderna (legible en pantallas)
+# Opciones: "sans serif", "serif", "monospace"
+font = "sans serif"
+
+# ========================================
+# CONFIGURACIÓN DEL SERVIDOR
+# ========================================
+[server]
+# Habilitar servir archivos estáticos desde carpeta /static
+# Permite acceder a: static/datasets/, static/images/
 enableStaticServing = true
+
+# Evitar que se abra el navegador automáticamente al iniciar
+# Útil para desarrollo y despliegue en servidores
+headless = true
+
+# Puerto por defecto (8501 es el estándar de Streamlit)
+port = 8501
+
+# Permitir CORS (Cross-Origin Resource Sharing)
+# Útil si planean hacer deploy en dominios diferentes
+enableCORS = false
+
+# Habilitar WebSocket para actualizaciones en tiempo real
+enableWebsocketCompression = true
+
+# ========================================
+# CONFIGURACIÓN DEL NAVEGADOR
+# ========================================
+[browser]
+# Deshabilitar recolección de estadísticas de uso
+# Respeta la privacidad del usuario
+gatherUsageStats = false
+
+# Color del icono del navegador (favicon)
+# Usar el color primario para consistencia
+serverAddress = "localhost"
+
+# ========================================
+# CONFIGURACIÓN DE UI/UX
+# ========================================
+[ui]
+# Ocultar el menú de hamburguesa (opcional, para presentaciones)
+# Descomenta la siguiente línea si quieres una interfaz más limpia
+# hideTopBar = true
+
+# ========================================
+# CONFIGURACIÓN DE LOGGER (DESARROLLO)
+# ========================================
+[logger]
+# Nivel de logging: "error", "warning", "info", "debug"
+# Para producción, usar "warning" o "error"
+level = "info"
+
+# ========================================
+# NOTAS PARA EL EQUIPO
+# ========================================
+# 1. Este archivo NO debe incluir información sensible (API keys, contraseñas)
+# 2. Para secretos, usar: .streamlit/secrets.toml (ya está en .gitignore)
+# 3. Colores seleccionados para:
+#    - Accesibilidad (contraste WCAG AA)
+#    - Profesionalismo (tema serio)
+#    - Legibilidad (texto oscuro sobre fondos claros)
+# 4. La paleta se replica en utils/visualizations.py para gráficos

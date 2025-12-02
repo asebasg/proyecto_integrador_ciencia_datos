@@ -1,8 +1,24 @@
-.venv
+# Python cache 
+__pycache__/
+.__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
+# Virtual environment
+.venv/
+venv/
+
+# Streamlit secrets
 .streamlit/secrets.toml
 .streamlit/secrets.yaml
 .streamlit/secrets.json
+__pycache__/
 
-.qodo/
+# IDE
 .vscode/
+.qodo/
+
+# OS
+.DS_Store
+Thumbs.db
